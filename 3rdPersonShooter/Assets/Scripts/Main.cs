@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Main : MonoBehaviour {
+public class Main : MonoBehaviour
+{
+    public SpawnManager spawnManager;
 
 	// Use this for initialization
 	void Start () {

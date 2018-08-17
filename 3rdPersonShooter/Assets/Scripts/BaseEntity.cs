@@ -2,20 +2,65 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseEntity : BaseObject {
+public class BaseEntity : BaseObject, ICollidable
+{
+    public float CurrentHealth;
+    public Animator _animator;
 
-	// Use this for initialization
-	void Start () {
+    public enum AnimationState
+    {
+        Idle,
+        Walk,
+        Attack,
+        Death
+    }
+
+    public AnimationState currentAnimState = AnimationState.Idle;
+
+    // Use this for initialization
+    protected override void Start()
+    {
+        base.Start();
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
-	void Awake()
-	{
-	
-	}
+    public virtual void OnCollisionEnter(Collision collision)
+    {
+        //Debug.Log("[" + name + "] on collision enter with [" + collision.gameObject.name + "]");
+    }
+
+    public virtual void OnCollisionExit(Collision collision)
+    {
+        //Debug.Log("[" + name + "] on collision exit with [" + collision.gameObject.name + "]");
+    }
+
+    public virtual void OnCollisionStay(Collision collision)
+    {
+        //Debug.Log("[" + name + "] on collision stay with [" + collision.gameObject.name + "]");
+    }
+
+    void Respawn()
+    {
+        ResetToDefault();
+    }
+
+    void ResetToDefault()
+    {
+
+    }
+
+    void ChangeState(AnimationState animState)
+    {
+        currentAnimState = animState;
+    }
+
+    void OnDeath()
+    {
+
+    }
+
 }
