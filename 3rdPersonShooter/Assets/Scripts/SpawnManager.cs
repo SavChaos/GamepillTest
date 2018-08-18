@@ -47,7 +47,7 @@ public class SpawnManager : MonoBehaviour
     {
         foreach (BaseSpawner spawner in spawners)
         {
-            if (!spawner.isActiveAndEnabled || spawner.FullEnemyCapacity)   //skip spawners that are at disabled or at full capacity
+            if (!spawner.isActiveAndEnabled || spawner.FullItemCapacity)   //skip spawners that are at disabled or at full capacity
                 continue;
             
             bool recyled = false;

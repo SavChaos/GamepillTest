@@ -66,10 +66,6 @@ public class Ammo : BaseObject
         Vector3 dirToContact = (transform.position - contactPoint).normalized;
         Vector3 shootDir = _rigidBody.velocity.normalized;
 
-        Vector3 diff = dirToContact - shootDir;
-        
-       // Debug.Log("ToContact x " + dirToContact.x + " y " + dirToContact.y + " z " + dirToContact.z + "   shootDir x " + shootDir.x + " y " + shootDir.y + " z " + shootDir.z + "   diff x " + diff.x + " y " + diff.y + " z " + diff.z);
-
         //if any of the direction axis flipped from positive to negative or vice versa, we have moved past our contact point
         if(dirToContact.x > 0 && prevDirToContact.x < 0 || dirToContact.x < 0 && prevDirToContact.x > 0
             || dirToContact.z > 0 && prevDirToContact.z < 0 || dirToContact.z < 0 && prevDirToContact.z > 0)
@@ -81,26 +77,4 @@ public class Ammo : BaseObject
     }
 
    
-    /*public void OnTriggerEnter(Collider other)
-    { 
-        if (other.gameObject.layer != LayerMask.NameToLayer("Player") && other.gameObject.layer != LayerMask.NameToLayer("Ammo"))
-        {
-            Kill();
-            Debug.Log("TRIGGER ENTER with [" + other.gameObject.name + "]");
-        }
-    }
-
-    public void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.layer != LayerMask.NameToLayer("Player"))
-        {
-            Kill();
-            Debug.Log("TRIGGER STAY with [" + other.gameObject.name + "]");
-        }
-    }
-
-    public void OnTriggerExit(Collider other)
-    {
-
-    }*/
 }

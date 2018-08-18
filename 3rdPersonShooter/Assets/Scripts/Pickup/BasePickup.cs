@@ -6,6 +6,7 @@ public class BasePickup : BaseObject, ITriggerable
 {
     public float rotationAngle;
     public PickupType pickupType;
+    public BaseSpawner spawner;
 
     public enum PickupType
     {
@@ -29,6 +30,7 @@ public class BasePickup : BaseObject, ITriggerable
 
     public virtual void OnTriggerEnter(Collider collider)
     {
+        spawner.currentItemSpawnCount--;
         Kill();
     }
 

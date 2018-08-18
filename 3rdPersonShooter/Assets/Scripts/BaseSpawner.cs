@@ -50,6 +50,7 @@ public class BaseSpawner : MonoBehaviour
     public void SpawnPickup(BasePickup pickup)
     {
         pickup.gameObject.SetActive(false);
+        pickup.spawner = this;
         pickup.IsReserved = true;
         float rndDelay = Random.Range(0, Max_Interval_Delay);
         currentItemSpawnCount++;
