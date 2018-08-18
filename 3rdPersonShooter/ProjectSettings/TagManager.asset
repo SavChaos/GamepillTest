@@ -18,9 +18,9 @@ TagManager:
   - Enemy
   - Pickup
   - Ammo
-  - 
-  - 
-  - 
+  - Vision
+  - AttackRange
+  - Environment
   - 
   - 
   - 

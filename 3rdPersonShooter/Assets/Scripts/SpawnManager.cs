@@ -12,7 +12,7 @@ public class SpawnManager : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.S))
+        if(Input.GetKeyDown(KeyCode.P))
         {
             BaseEnemy.EnemyType enemyTypeToSpawn = BaseEnemy.EnemyType.Brute;
 

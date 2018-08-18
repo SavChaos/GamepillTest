@@ -4,16 +4,13 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class EnemyAttackBehavior : MonoBehaviour
+//Works with AI Manager to implement Attack Detection and Behavior for an enemy
+public class AIAttackModule : MonoBehaviour
 {
     public AIManager aiManager;
-    public Animator animator;
-    public PlayerManager playerScript;
-
-    bool attackStarted = false;
-
-    const float ENEMY_DMG = 5f;
-    const float ENEMY_ATTACK_SPEED = 1.5f;
+    public BoxCollider _collider;
+    
+    public const float ENEMY_DMG = 5f;
 
     public delegate void PlayerAttacked(float damage);
     public static PlayerAttacked OnPlayerAttacked;
@@ -28,8 +25,9 @@ public class EnemyAttackBehavior : MonoBehaviour
     {
         if (collider.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            animator.SetBool("IsAttacking", true);
+            Debug.LogError("ATTTTTT");
             aiManager.SwitchAIState(AIManager.AIState.Attacking);
+            aiManager.detectionModule._collider.enabled = false;
         }
     }
 
@@ -39,11 +37,6 @@ public class EnemyAttackBehavior : MonoBehaviour
         {
             if (aiManager.currentAIState == AIManager.AIState.Attacking)
             {
-                if (!attackStarted)
-                {
-                    StartCoroutine(AttackProcess());
-                    attackStarted = true;
-                }
             }
         }
     }
@@ -52,26 +45,13 @@ public class EnemyAttackBehavior : MonoBehaviour
     {
         if (collider.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            animator.SetBool("IsAttacking", false);
+            aiManager.enemy._animator.SetBool("IsAttacking", false);
             aiManager.SwitchAIState(AIManager.AIState.Seeking);
+            aiManager.detectionModule._collider.enabled = true;
         }
     }
 
-    IEnumerator AttackProcess()
-    {
-        OnPlayerAttacked(ENEMY_DMG);
+   
 
-        Debug.Log("!!!DMG!!!");
-
-        yield return new WaitForSeconds(ENEMY_ATTACK_SPEED);
-
-        attackStarted = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }
 

@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class BaseEntity : BaseObject, ICollidable
 {
+    public float TotalHealth;
     public float CurrentHealth;
+
+    public GameObject model;
     public Animator _animator;
 
     public enum AnimationState

@@ -43,9 +43,9 @@ public interface ICollidable
 
 public interface ITriggerable
 {
-    void OnTriggerEnter(Collider other);
-    void OnTriggerStay(Collider other);
-    void OnTriggerExit(Collider other);
+    void OnTriggerEnter(Collider collider);
+    void OnTriggerStay(Collider collider);
+    void OnTriggerExit(Collider collider);
 }
 
 public interface IPoolable

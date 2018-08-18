@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BaseEnemy : BaseEntity
 {
-    public AIManager aiManager;
+    public AIManager aiManager;    
 
     public EnemyType enemyType;
     public enum EnemyType
@@ -30,8 +30,18 @@ public class BaseEnemy : BaseEntity
         base.Refresh(startPos);
 
         //randomize look direction
-        Vector3 eulerAngles = transform.rotation.eulerAngles;
-        transform.rotation = Quaternion.Euler(eulerAngles.x, Random.Range(0, 360), eulerAngles.z);
+      //  Vector3 eulerAngles = transform.rotation.eulerAngles;
+      //  transform.rotation = Quaternion.Euler(eulerAngles.x, Random.Range(0, 360), eulerAngles.z);
     }
+
+    public override void OnCollisionEnter(Collision collision)
+    {
+        base.OnCollisionEnter(collision);
+
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            aiManager.TurnAwayFromEnemy(collision.gameObject.transform);
+        }
+    }  
 
 }

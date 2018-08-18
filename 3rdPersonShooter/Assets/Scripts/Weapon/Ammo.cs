@@ -16,24 +16,43 @@ public class Ammo : BaseObject
 
     public void Fire(Ray shootRay, float force)
     {
-
         Debug.Log("raycasting");
-        RaycastHit hit;
+        RaycastHit[] hits = Physics.RaycastAll(shootRay);
 
         //create a raycast in the direction
         //we are always guaranteed to make contact with a surface in the level
-        if (Physics.Raycast(shootRay, out hit))
+
+        RaycastHit closestHit = new RaycastHit();  //allow us to track the closest hit object to the ray
+        float shortestDistance = Mathf.Infinity;
+
+        if (hits.Length > 0)
         {
-            if (hit.collider != null)
+            foreach (RaycastHit hit in hits)
             {
-                Debug.LogError("RAY CAST HIT [" + hit.collider.gameObject.name + "]");
-                contactPoint = hit.point;
-                Vector3 bulletVelocity = shootRay.direction.normalized;
-                prevDirToContact = (transform.position - contactPoint).normalized;
-                _rigidBody.velocity = bulletVelocity * force;
+                if (hit.collider != null)
+                {
+                    if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy") || hit.collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
+                    {
+                        float distanceToHit = Vector2.Distance(transform.position, hit.point);
+                        if(distanceToHit < shortestDistance)
+                        {
+                            closestHit = hit;
+                            shortestDistance = distanceToHit;
+                        }
+
+                    }
+                }
             }
         }
-        
+
+        if (closestHit.collider != null)
+        {
+            Debug.LogError("RAY CAST HIT [" + closestHit.collider.gameObject.name + "]");
+            contactPoint = closestHit.point;
+            Vector3 bulletVelocity = shootRay.direction.normalized;
+            prevDirToContact = (transform.position - contactPoint).normalized;
+            _rigidBody.velocity = bulletVelocity * force;
+        }
     }
 
     void FixedUpdate()

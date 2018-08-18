@@ -21,7 +21,7 @@ public class PlayerManager : BaseEntity
 
     private void Awake()
     {
-        EnemyAttackBehavior.OnPlayerAttacked += OnPlayerAttacked;
+        AIAttackModule.OnPlayerAttacked += OnPlayerAttacked;
     }
 
     public Vector3 playerCorePos
