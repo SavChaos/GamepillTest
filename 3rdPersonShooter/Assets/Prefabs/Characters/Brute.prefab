@@ -2518,8 +2518,9 @@ MonoBehaviour:
   CurrentHealth: 40
   model: {fileID: 1084680171365920}
   _animator: {fileID: 95961663811946134}
-  currentAnimState: 0
+  Score_Awarded: 20
   aiManager: {fileID: 114679649552909214}
+  CLEAN_UP_TIME: 5
   enemyType: 0
 --- !u!114 &114174993300220706
 MonoBehaviour:
@@ -2533,7 +2534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aiManager: {fileID: 114679649552909214}
-  _collider: {fileID: 0}
+  _collider: {fileID: 65009069910584286}
 --- !u!114 &114599610733321936
 MonoBehaviour:
   m_ObjectHideFlags: 1

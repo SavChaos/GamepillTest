@@ -4,32 +4,67 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    public float BASE_SPAWN_INTERVAL = 10;
     public List<BaseEnemy> enemyPoolList;
     public List<BaseSpawner> spawners;
     public GameObject BruteEnemy_Prefab;
-    public GameObject ZombieEnemy_Prefab;
-    public GameObject MutantEnemy_Prefab;
 
-    void Update()
+    private void Start()
+    { 
+        StartCoroutine(SpawnEnemiesEachInterval());
+    }
+
+    IEnumerator SpawnEnemiesEachInterval()
     {
-        if(Input.GetKeyDown(KeyCode.P))
+        while (!Main.GAME_OVER)
         {
-            BaseEnemy.EnemyType enemyTypeToSpawn = BaseEnemy.EnemyType.Brute;
+            SpawnEnemies();
+
+            yield return new WaitForSeconds(BASE_SPAWN_INTERVAL);
+        }
+    }
+
+    void SpawnEnemies()
+    {
+        BaseEnemy.EnemyType enemyTypeToSpawn = BaseEnemy.EnemyType.Brute;
+
+        foreach (BaseSpawner spawner in spawners)
+        {
+            if (spawner.FullCapacity)   //skip spawners that are at full capacity
+                continue;
+
+            Debug.LogError("spawner spawn");
+
+            bool recyled = false;
 
             //return enemy from pool
             foreach (BaseEnemy enemy in enemyPoolList)
             {
-                if (enemy.enemyType == enemyTypeToSpawn && enemy.IsDead)
+                if (enemy.enemyType == enemyTypeToSpawn && enemy.IsDead && !enemy.IsReserved)
                 {
-                    spawners[0].SpawnEnemy(enemy);
-                    return;
+                    spawner.SpawnEnemy(enemy);
+                    recyled = true;
+
+                    break;
                 }
             }
 
-            //if there is no object to use from pool, we instantiate a new one and store in the pool
-            BaseEnemy _enemy = CreateEnemy(enemyTypeToSpawn);
-            enemyPoolList.Add(_enemy);
-            spawners[0].SpawnEnemy(_enemy);
+            if (!recyled)
+            {
+                //if there is no object to use from pool, we instantiate a new one and store in the pool
+                BaseEnemy _enemy = CreateEnemy(enemyTypeToSpawn);
+                enemyPoolList.Add(_enemy);
+                spawner.SpawnEnemy(_enemy);
+            }
+        }
+    }
+
+    void Update()
+    {        
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            SpawnEnemies();
         }
     }
 

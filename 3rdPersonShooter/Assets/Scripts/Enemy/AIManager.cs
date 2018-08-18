@@ -72,7 +72,7 @@ public class AIManager : MonoBehaviour
         //randomely pick between Idle or Wander when refreshing this enemy
         if (Random.value<0.5f)
         {
-            SwitchAIState(AIState.Wandering); //SwitchAIState(AIState.Idle);
+            SwitchAIState(AIState.Idle); //SwitchAIState(AIState.Idle);
         }
         else
         {
@@ -102,9 +102,7 @@ public class AIManager : MonoBehaviour
     }
 
     public void SwitchAIState(AIState aistate)
-    {
-        if (enemy.IsDead)
-            return;
+    {       
 
         currentAIState = aistate;
 
@@ -146,7 +144,12 @@ public class AIManager : MonoBehaviour
     {
         agent.enabled = false;
         enemy._rigidBody.velocity = Vector3.zero;
-        StopCoroutine(JitterCoroutine);
+
+        if (JitterCoroutine != null)
+        {
+            StopCoroutine(JitterCoroutine);
+            JitterCoroutine = null;
+        }
 
         enemy._animator.SetBool("IsMoving", false);
         enemy._rigidBody.mass = 100; //make enemy unmovable
@@ -199,6 +202,7 @@ public class AIManager : MonoBehaviour
         agent.enabled = false;
         detectionModule.enabled = false;
         attackModule.enabled = false;
+        currentSpawner.currentSpawnCount--; //remove this Enemy from its spawn Area Count
     }
    
     void Return()
@@ -261,7 +265,7 @@ public class AIManager : MonoBehaviour
     void SetWanderAngle(float angle)
     {
         wanderAngleTo = angle;
-        Debug.LogError("Hard Set WANDER TO [" + wanderAngleTo + "]");
+        //Debug.LogError("Hard Set WANDER TO [" + wanderAngleTo + "]");
         createJitter = false;
     }
 
@@ -271,6 +275,7 @@ public class AIManager : MonoBehaviour
         switch (currentAIState)
         {
             case AIState.Idle:
+                Idling();
                 break;
 
             case AIState.Wandering:
@@ -302,11 +307,23 @@ public class AIManager : MonoBehaviour
 
     public void PlayerUnDetected()
     {
+        //once you have enemy attention, they will hound you relentlessly
+        if (enemy._aggro)
+            return;
+
         SwitchAIState(AIState.Wandering);
         enemy._animator.SetBool("IsSeeking", false);
         Debug.Log("SWITCH TO SEEK");
     }
-    
+
+    void Idling()
+    {
+        if(enemy._aggro)
+        {
+            SwitchAIState(AIState.Seeking);
+            return;
+        }
+    }
 
     void Wander()
     {
@@ -314,6 +331,13 @@ public class AIManager : MonoBehaviour
         //if out of bounds, Switch AI State to RETURN
         if (!CheckAIIsWithinWanderBounds())
         {
+            return;
+        }
+
+        //if enemy is Aggroed, then they can no longer wonder, they will chase you endlessly
+        if(enemy._aggro)
+        {
+            SwitchAIState(AIState.Seeking);
             return;
         }
 
@@ -395,7 +419,13 @@ public class AIManager : MonoBehaviour
                 //create immediate jiter in clockwise or counter clockwise direction from the current wander target angle
                 SetWanderAngle(newAngle);
                 createImmediateJitter = true;
-                StopCoroutine(JitterCoroutine);
+
+                if (JitterCoroutine != null)
+                {
+                    StopCoroutine(JitterCoroutine);
+                    JitterCoroutine = null;
+                }
+
                 turnSpeedMult = 5;
             }
         }
@@ -428,7 +458,7 @@ public class AIManager : MonoBehaviour
         if (currentAIState != AIState.Wandering)
             return;
         
-        Debug.LogError("Turning away from enemy");
+        //Debug.LogError("Turning away from enemy");
 
         if (!createImmediateJitter)
         {
@@ -438,18 +468,22 @@ public class AIManager : MonoBehaviour
 
             if(angleOfWanderTarget<angleOfOtherEnemy)
             {
-                Debug.LogError("Turning ClockWise to avoid enemy [" + name +"]");
+               //Debug.LogError("Turning ClockWise to avoid enemy [" + name +"]");
                 //create immediate jiter in clockwise or counter clockwise direction from the current wander target angle
                 SetWanderAngle((angleOfWanderTarget*Mathf.Rad2Deg) - 45);
             }
             else
             {
-                Debug.LogError("Turning Counter clockwise to avoid enemy [" + name +"]");
+                //Debug.LogError("Turning Counter clockwise to avoid enemy [" + name +"]");
                 //create immediate jiter in clockwise or counter clockwise direction from the current wander target angle
                 SetWanderAngle((angleOfWanderTarget * Mathf.Rad2Deg) + 45);
             }
 
-            StopCoroutine(JitterCoroutine);
+            if (JitterCoroutine != null)
+            {
+                StopCoroutine(JitterCoroutine);
+                JitterCoroutine = null;
+            }
             turnSpeedMult = 5;
             createImmediateJitter = true;
         }

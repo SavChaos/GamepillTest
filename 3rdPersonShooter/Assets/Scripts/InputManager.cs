@@ -20,9 +20,9 @@ public class InputManager : MonoBehaviour
         player._animator.SetFloat("IdleToWalk", motionSpeed);
 
         //we take the worlds forward and right axis to drive forward and side movement
-        Vector3 Velocity = Vector3.forward * Input.GetAxis("Forward") * player.speed;
-        Velocity += Vector3.right * Input.GetAxis("Horizontal") * player.speed;    
-                
+        Vector3 Velocity = Vector3.forward * Input.GetAxis("Forward") * player.speed * player.speedMult;
+        Velocity += Vector3.right * Input.GetAxis("Horizontal") * player.speed * player.speedMult;
+
         player._rigidBody.velocity = Velocity;
         
         //make top down camera follow player from above

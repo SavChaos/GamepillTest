@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpeedPickup : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+public class SpeedPickup : BasePickup
+{
+    public override void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            base.OnTriggerEnter(collider);
+            Main.GetInstance().currentPlayer.IncreaseSpeed();
+        }
+    }
 }

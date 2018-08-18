@@ -57,6 +57,7 @@ public class Ammo : BaseObject
             {
                 BaseEnemy enemy = closestHit.collider.gameObject.GetComponent<BaseEnemy>();
                 enemy.ChangeHealth(-Main.GetInstance().currentPlayer.weapon.WEAPON_DAMAGE);
+                enemy._aggro = true;    //now the player has caught enemy attension
             }
         }
     }

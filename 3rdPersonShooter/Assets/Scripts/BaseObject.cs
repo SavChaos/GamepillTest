@@ -7,6 +7,7 @@ public class BaseObject : MonoBehaviour, IPoolable
     public Rigidbody _rigidBody;
     public Collider _collider;
     public bool IsDead = false;
+    public bool IsReserved = false; //special flag to alert that this object has been reserved by a caller for respawning
   
     // Use this for initialization
     protected virtual void Start ()
@@ -22,6 +23,7 @@ public class BaseObject : MonoBehaviour, IPoolable
     public virtual void Kill()
     {
         IsDead = true;
+        IsReserved = false;
         gameObject.SetActive(false);
     }
 
@@ -30,6 +32,7 @@ public class BaseObject : MonoBehaviour, IPoolable
         IsDead = false;
         gameObject.SetActive(true);
         transform.position = startPos;
+        _collider.enabled = true;
     }
 
 }

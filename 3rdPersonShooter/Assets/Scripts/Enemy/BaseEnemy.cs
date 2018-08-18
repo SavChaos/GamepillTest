@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class BaseEnemy : BaseEntity
 {
+    public int Score_Awarded;
     public AIManager aiManager;
     public float CLEAN_UP_TIME = 5f;
     public EnemyType enemyType;
+    public bool _aggro = false;
+
     public enum EnemyType
     {
         Brute,
@@ -30,15 +33,17 @@ public class BaseEnemy : BaseEntity
         base.Refresh(startPos);
 
         CurrentHealth = TotalHealth;    //reset health
+        _aggro = false;
 
         //randomize look direction
-      //  Vector3 eulerAngles = transform.rotation.eulerAngles;
-      //  transform.rotation = Quaternion.Euler(eulerAngles.x, Random.Range(0, 360), eulerAngles.z);
+        //  Vector3 eulerAngles = transform.rotation.eulerAngles;
+        //  transform.rotation = Quaternion.Euler(eulerAngles.x, Random.Range(0, 360), eulerAngles.z);
     }
 
     protected override void OnDeath()
     {
         aiManager.SwitchAIState(AIManager.AIState.Dying);
+        Main.GetInstance().hud.UpdateScore(Score_Awarded);
         base.OnDeath();
         StartCoroutine(WaitCleanUpEnemy());
     }

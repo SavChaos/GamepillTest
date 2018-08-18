@@ -17,10 +17,6 @@ public class BaseEntity : BaseObject, ICollidable
         base.Start();
     }
 
-    // Update is called once per frame
-    void Update () {
-		
-	}
 
     public virtual void OnCollisionEnter(Collision collision)
     {
@@ -58,9 +54,11 @@ public class BaseEntity : BaseObject, ICollidable
         }
     }
 
+  
+
     protected virtual void OnDeath()
     {
-        IsDead = true;
+        _collider.enabled = false;
         _animator.SetBool("IsDead", true);
     }
 
