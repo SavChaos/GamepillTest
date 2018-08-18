@@ -2429,7 +2429,7 @@ Camera:
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: -1
+  m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -2527,14 +2527,15 @@ MonoBehaviour:
   _rigidBody: {fileID: 54202632792347222}
   _collider: {fileID: 136132212171585390}
   IsDead: 0
-  TotalHealth: 0
+  TotalHealth: 100
   CurrentHealth: 100
   model: {fileID: 1325854477583174}
   _animator: {fileID: 95448245756087378}
   currentAnimState: 0
   _camera: {fileID: 0}
   weapon: {fileID: 114265164270296512}
-  speed: 10
+  input: {fileID: 114197952776698758}
+  speed: 5
   horizTurnSpeed: 3
   verticalTurnSpeed: 3
   m_GroundCheckDistance: 2

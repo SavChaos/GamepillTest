@@ -11,7 +11,9 @@ public class AIManager : MonoBehaviour
     //public Image healthBarFill;
 
     const float WANDER_SPEED = 1f;
-    const float SEEK_SPEED = 5;
+    const float SEEK_SPEED = 3.5f;
+    const float RETURN_SPEED = 1.5f;
+    const float JITTER_CHANGE_INTERVAL = 5f;
     
     public NavMeshAgent agent;
 
@@ -64,6 +66,9 @@ public class AIManager : MonoBehaviour
     {
         currentSpawner = spawner;
 
+        detectionModule.enabled = true;
+        attackModule.enabled = true;
+
         //randomely pick between Idle or Wander when refreshing this enemy
         if (Random.value<0.5f)
         {
@@ -98,6 +103,9 @@ public class AIManager : MonoBehaviour
 
     public void SwitchAIState(AIState aistate)
     {
+        if (enemy.IsDead)
+            return;
+
         currentAIState = aistate;
 
         switch (currentAIState)
@@ -159,6 +167,7 @@ public class AIManager : MonoBehaviour
     void SetSeek()
     {
         agent.enabled = true;
+        agent.speed = SEEK_SPEED;
         enemy._animator.SetBool("IsSeeking", true);
         enemy._rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY |
                                        RigidbodyConstraints.FreezePositionY;
@@ -167,6 +176,7 @@ public class AIManager : MonoBehaviour
     void SetReturn()
     {
         agent.enabled = true;
+        agent.speed = RETURN_SPEED;
         enemy._animator.SetBool("IsMoving", true);
         enemy._rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY |
                                        RigidbodyConstraints.FreezePositionY;
@@ -183,36 +193,52 @@ public class AIManager : MonoBehaviour
 
     void SetDeath()
     {
-        if (!enemy.IsDead)
-        {
-            enemy._rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY |
-                                        RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+        enemy._rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY |
+                                    RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
 
-
-            agent.enabled = false;
-            //Death();
-        }
+        agent.enabled = false;
+        detectionModule.enabled = false;
+        attackModule.enabled = false;
     }
    
+    void Return()
+    {
+        if (agent.enabled)
+        {
+            agent.SetDestination(currentSpawner.spawnBounds.pos);
+        }
+                
+        ResetModelRotation();
+
+        if(Utils.WithinBounds(transform.position, currentSpawner.spawnBounds))
+        {
+            SwitchAIState(AIState.Wandering);
+        }
+    }
+    
 
     void Seek()
     {
+        if (Main.GetInstance().currentPlayer.IsDead)
+        {
+            SwitchAIState(AIState.Wandering);
+            return;
+        }
+
         if (agent.enabled)
         {
             agent.SetDestination(Main.GetInstance().currentPlayer.transform.position);
         }
-
-        //Face the player
-        FaceTarget();
+        
+        ResetModelRotation();
     }
 
-    void Attack()
+    void Attacking()
     {
-        if (agent.enabled)
-            agent.SetDestination(Main.GetInstance().currentPlayer.transform.position);
-
-        //Face the Target
-        FaceTarget();
+        if (Main.GetInstance().currentPlayer.IsDead)
+        {
+            SwitchAIState(AIState.Wandering);
+        }
     }
 
     //this forces an immediate randomized jitter
@@ -235,7 +261,7 @@ public class AIManager : MonoBehaviour
     void SetWanderAngle(float angle)
     {
         wanderAngleTo = angle;
-        //Debug.LogError("Hard Set WANDER TO [" + wanderAngleTo + "]");
+        Debug.LogError("Hard Set WANDER TO [" + wanderAngleTo + "]");
         createJitter = false;
     }
 
@@ -256,24 +282,16 @@ public class AIManager : MonoBehaviour
                 break;
 
             case AIState.Attacking:
-               // Attack();
+                Attacking();
                 break;
 
             case AIState.Returning:
+                Return();
                 break;
 
             case AIState.Dying:
-                if (!enemy.IsDead)
-                {
-                  //  Death();
-                }
                 break;
         }
-    }
-
-    void Return()
-    {
-
     }
 
     public void PlayerDetected()
@@ -288,15 +306,20 @@ public class AIManager : MonoBehaviour
         enemy._animator.SetBool("IsSeeking", false);
         Debug.Log("SWITCH TO SEEK");
     }
-
-
+    
 
     void Wander()
     {
+        //first check if this AI is within the Wander bounds
+        //if out of bounds, Switch AI State to RETURN
+        if (!CheckAIIsWithinWanderBounds())
+        {
+            return;
+        }
+
         if (!createJitter && !createImmediateJitter)
         {
-            JitterCoroutine = StartCoroutine(Jitter(5));
-            //Debug.LogError("START NEW JITTER COROUTINE");
+            JitterCoroutine = StartCoroutine(Jitter(JITTER_CHANGE_INTERVAL));    //start a new jitter every time interval
             createJitter = true;
         }
 
@@ -343,14 +366,16 @@ public class AIManager : MonoBehaviour
         
 
         //FACE THE TARGET       
-        Quaternion rotationToFace = Quaternion.LookRotation(dirWithoutY, Vector3.up);        
-        enemy.model.transform.rotation = rotationToFace;
+        Quaternion rotationToFace = Quaternion.LookRotation(dirWithoutY, Vector3.up);
+        enemy.model.transform.rotation = Quaternion.Slerp(enemy.model.transform.rotation, rotationToFace, 0.5f);
 
-        //constantly check if this AI is wandering within bounds
-        CheckIfWithinWanderBounds();
+        //check if this AI's wander target is within bounds
+        //modify jitter and keep AI within Bounds
+        CheckIfTargetIsWithinWanderBounds();
+
     }
-
-    void CheckIfWithinWanderBounds()
+       
+    void CheckIfTargetIsWithinWanderBounds()
     {
         Vector2 wanderTarget2DPos = new Vector2(WanderTarget.transform.position.x, WanderTarget.transform.position.z);
         Vector2 enemy2DPos = new Vector2(transform.position.x, transform.position.z);
@@ -379,6 +404,21 @@ public class AIManager : MonoBehaviour
             createImmediateJitter = false;
             turnSpeedMult = 1;
         }
+    }
+
+    bool CheckAIIsWithinWanderBounds()
+    {
+        Circle2D exagerratedSpawnBounds = currentSpawner.spawnBounds; 
+        //we take an area that is 25% larger than the actual spawn bounds, giving some flexibility
+        exagerratedSpawnBounds.radius *= 1.25f;
+
+        if (!Utils.WithinBounds(transform.position, exagerratedSpawnBounds))
+        {
+            SwitchAIState(AIState.Returning);
+            return false;
+        }
+
+        return true;
     }
 
     //when meetings another enemy, decide which is the best direction to turn away to avoid the enemy
@@ -462,8 +502,8 @@ public class AIManager : MonoBehaviour
         return 1;
     }
 
-
-    void FaceTarget()
+    //sets the model to align with the player forward vector
+    void ResetModelRotation()
     {
         Quaternion rot = enemy.model.transform.localRotation;
 
@@ -472,7 +512,6 @@ public class AIManager : MonoBehaviour
 
     public void AttackHit()
     {
-        Debug.Log("HITTT");
         AIAttackModule.OnPlayerAttacked(AIAttackModule.ENEMY_DMG);
     }
 

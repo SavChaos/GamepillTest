@@ -11,7 +11,7 @@ public class BaseSpawner : MonoBehaviour
 
     private void Awake()
     {
-        spawnBounds = new Circle2D(new Vector2(transform.position.x, transform.position.z), radius);
+        spawnBounds = new Circle2D(new Vector2(transform.position.x, transform.position.z), new Vector2(xOffset, zOffset), radius);
     }
 
     //Spawns an enemy in a random position within the Spawn Area
@@ -34,14 +34,14 @@ public class BaseSpawner : MonoBehaviour
 
 }
 
-public class Circle2D
+public struct Circle2D
 {
     public Vector2 pos;
     public float radius;
 
-    public Circle2D(Vector2 _pos, float _radius)
+    public Circle2D(Vector2 _pos, Vector2 _offset, float _radius)
     {
-        pos = _pos;
+        pos = _pos + _offset;
         radius = _radius;
     }
 }

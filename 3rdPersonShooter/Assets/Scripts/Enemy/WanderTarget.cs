@@ -6,27 +6,19 @@ public class WanderTarget : MonoBehaviour, ITriggerable
 {
     public AIManager aiManager;
     public SphereCollider sphereCollider;
+    public MeshRenderer meshRenderer;
+
+    void Awake()
+    {
+        if(!GameConfig.DEBUG_MODE)
+        {
+            meshRenderer.enabled = false;
+        }
+    }
 
     public void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("wander");
-
         Vector3 wanderTargetPos = transform.position;
-
-       /* if(aiManager.currentTurnState == AIManager.TurnState.Clockwise)
-        {
-
-        }
-        else if (aiManager.currentTurnState == AIManager.TurnState.CounterClockWise)
-        {
-
-        }
-        else
-        {
-            //do something else
-
-        }*/
-
     }
 
  

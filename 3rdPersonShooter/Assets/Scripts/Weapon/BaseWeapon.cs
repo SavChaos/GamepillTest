@@ -8,6 +8,7 @@ public class BaseWeapon : MonoBehaviour
     public GameObject Ammo_Prefab;
     public List<Ammo> ammoList = new List<Ammo>();
     public Transform nozzleMarker;
+    public float WEAPON_DAMAGE = 20;
     const float SHOOT_FORCE = 25;
     public Vector3 shootVector;
 

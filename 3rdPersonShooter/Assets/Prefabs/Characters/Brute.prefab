@@ -2514,8 +2514,8 @@ MonoBehaviour:
   _rigidBody: {fileID: 54064697794288328}
   _collider: {fileID: 136553045557329584}
   IsDead: 0
-  TotalHealth: 100
-  CurrentHealth: 100
+  TotalHealth: 40
+  CurrentHealth: 40
   model: {fileID: 1084680171365920}
   _animator: {fileID: 95961663811946134}
   currentAnimState: 0
@@ -2546,7 +2546,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aiManager: {fileID: 114679649552909214}
-  sphereCollider: {fileID: 0}
+  sphereCollider: {fileID: 135723279225566318}
+  meshRenderer: {fileID: 23141726654941136}
 --- !u!114 &114679649552909214
 MonoBehaviour:
   m_ObjectHideFlags: 1

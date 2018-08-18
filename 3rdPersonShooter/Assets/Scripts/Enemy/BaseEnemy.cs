@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class BaseEnemy : BaseEntity
 {
-    public AIManager aiManager;    
-
+    public AIManager aiManager;
+    public float CLEAN_UP_TIME = 5f;
     public EnemyType enemyType;
     public enum EnemyType
     {
@@ -29,9 +29,25 @@ public class BaseEnemy : BaseEntity
     {
         base.Refresh(startPos);
 
+        CurrentHealth = TotalHealth;    //reset health
+
         //randomize look direction
       //  Vector3 eulerAngles = transform.rotation.eulerAngles;
       //  transform.rotation = Quaternion.Euler(eulerAngles.x, Random.Range(0, 360), eulerAngles.z);
+    }
+
+    protected override void OnDeath()
+    {
+        aiManager.SwitchAIState(AIManager.AIState.Dying);
+        base.OnDeath();
+        StartCoroutine(WaitCleanUpEnemy());
+    }
+
+    IEnumerator WaitCleanUpEnemy()
+    {
+        yield return new WaitForSeconds(CLEAN_UP_TIME);
+
+        Kill();
     }
 
     public override void OnCollisionEnter(Collision collision)

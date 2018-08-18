@@ -6,6 +6,7 @@ public class PlayerManager : BaseEntity
 {
     public Camera _camera;
     public BaseWeapon weapon;
+    public InputManager input;
 
     public float speed = 10f;
 
@@ -48,7 +49,16 @@ public class PlayerManager : BaseEntity
 
     void OnPlayerAttacked(float damage)
     {
-        CurrentHealth -= damage;
+        if (IsDead)
+            return;
+
+        ChangeHealth(-damage);
+    }
+
+    protected override void OnDeath()
+    {
+        base.OnDeath();
+        input.enabled = false;
     }
 
     void ShootPositionReached()

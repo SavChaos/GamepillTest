@@ -21,11 +21,20 @@ public class AIAttackModule : MonoBehaviour
 
     }
 
+    public void OnDisable()
+    {
+        _collider.enabled = false;
+    }
+
+    public void OnEnable()
+    {
+        _collider.enabled = true;
+    }
+
     void OnTriggerEnter(Collider collider)
     {
         if (collider.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            Debug.LogError("ATTTTTT");
             aiManager.SwitchAIState(AIManager.AIState.Attacking);
             aiManager.detectionModule._collider.enabled = false;
         }
@@ -33,12 +42,7 @@ public class AIAttackModule : MonoBehaviour
 
     void OnTriggerStay(Collider collider)
     {
-        if (collider.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-            if (aiManager.currentAIState == AIManager.AIState.Attacking)
-            {
-            }
-        }
+       
     }
 
     void OnTriggerExit(Collider collider)

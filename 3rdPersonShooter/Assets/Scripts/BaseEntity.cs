@@ -10,15 +10,6 @@ public class BaseEntity : BaseObject, ICollidable
     public GameObject model;
     public Animator _animator;
 
-    public enum AnimationState
-    {
-        Idle,
-        Walk,
-        Attack,
-        Death
-    }
-
-    public AnimationState currentAnimState = AnimationState.Idle;
 
     // Use this for initialization
     protected override void Start()
@@ -46,24 +37,31 @@ public class BaseEntity : BaseObject, ICollidable
         //Debug.Log("[" + name + "] on collision stay with [" + collision.gameObject.name + "]");
     }
 
-    void Respawn()
+    protected void Respawn()
     {
         ResetToDefault();
     }
 
-    void ResetToDefault()
+    protected void ResetToDefault()
     {
 
     }
 
-    void ChangeState(AnimationState animState)
+
+    public void ChangeHealth(float change)
     {
-        currentAnimState = animState;
+        CurrentHealth += change;
+        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, TotalHealth);
+        if (CurrentHealth <= 0)
+        {
+            OnDeath();
+        }
     }
 
-    void OnDeath()
+    protected virtual void OnDeath()
     {
-
+        IsDead = true;
+        _animator.SetBool("IsDead", true);
     }
 
 }

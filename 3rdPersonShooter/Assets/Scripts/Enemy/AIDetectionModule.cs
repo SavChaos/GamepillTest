@@ -13,6 +13,16 @@ public class AIDetectionModule : MonoBehaviour, ITriggerable
 
     }
 
+    public void OnDisable()
+    {
+        _collider.enabled = false;
+    }
+
+    public void OnEnable()
+    {
+        _collider.enabled = true;
+    }
+
     public void OnTriggerEnter(Collider collider)
     {
         if (collider.gameObject.layer == LayerMask.NameToLayer("Player"))

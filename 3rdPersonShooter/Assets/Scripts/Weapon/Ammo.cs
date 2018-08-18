@@ -39,7 +39,6 @@ public class Ammo : BaseObject
                             closestHit = hit;
                             shortestDistance = distanceToHit;
                         }
-
                     }
                 }
             }
@@ -52,6 +51,13 @@ public class Ammo : BaseObject
             Vector3 bulletVelocity = shootRay.direction.normalized;
             prevDirToContact = (transform.position - contactPoint).normalized;
             _rigidBody.velocity = bulletVelocity * force;
+
+            //damage if enemy
+            if(closestHit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                BaseEnemy enemy = closestHit.collider.gameObject.GetComponent<BaseEnemy>();
+                enemy.ChangeHealth(-Main.GetInstance().currentPlayer.weapon.WEAPON_DAMAGE);
+            }
         }
     }
 
