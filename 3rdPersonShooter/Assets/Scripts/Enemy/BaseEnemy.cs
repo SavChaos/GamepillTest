@@ -13,8 +13,8 @@ public class BaseEnemy : BaseEntity
     public enum EnemyType
     {
         Brute,
-        Zombie,
-        Mutant
+        //Zombie, (not implemented)
+        //Mutant  (not implemented)
     }
 
     // Use this for initialization

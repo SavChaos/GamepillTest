@@ -1271,7 +1271,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1707064815543454}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.0002358, y: 5.511056e-17, z: -1.2409794}
   m_LocalScale: {x: 0.81704, y: 0.81704, z: 0.81704}
   m_Children:
   - {fileID: 4381480972384334}
@@ -2514,6 +2514,7 @@ MonoBehaviour:
   _rigidBody: {fileID: 54064697794288328}
   _collider: {fileID: 136553045557329584}
   IsDead: 0
+  IsReserved: 0
   TotalHealth: 40
   CurrentHealth: 40
   model: {fileID: 1084680171365920}
@@ -2522,6 +2523,7 @@ MonoBehaviour:
   aiManager: {fileID: 114679649552909214}
   CLEAN_UP_TIME: 5
   enemyType: 0
+  _aggro: 0
 --- !u!114 &114174993300220706
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2594,7 +2596,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 4
+  m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &135723279225566318
 SphereCollider:
@@ -2617,10 +2619,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.38
+  m_Radius: 0.5
   m_Height: 2.21
   m_Direction: 1
-  m_Center: {x: 0, y: 1.12, z: 0.18}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!137 &137153478652801428
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

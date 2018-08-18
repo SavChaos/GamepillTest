@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class SpeedPickup : BasePickup
 {
+    private void Awake()
+    {
+        pickupType = PickupType.Speed;
+    }
+
     public override void OnTriggerEnter(Collider collider)
     {
         if (collider.gameObject.layer == LayerMask.NameToLayer("Player"))

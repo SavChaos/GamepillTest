@@ -5,6 +5,14 @@ using UnityEngine;
 public class BasePickup : BaseObject, ITriggerable
 {
     public float rotationAngle;
+    public PickupType pickupType;
+
+    public enum PickupType
+    {
+        Health,
+        Speed,
+        //Ammo  (not implemented)
+    }
 
     // Use this for initialization
     protected override void Start()

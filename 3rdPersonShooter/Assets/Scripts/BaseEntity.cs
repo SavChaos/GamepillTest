@@ -44,7 +44,7 @@ public class BaseEntity : BaseObject, ICollidable
     }
 
 
-    public void ChangeHealth(float change)
+    public virtual void ChangeHealth(float change)
     {
         CurrentHealth += change;
         CurrentHealth = Mathf.Clamp(CurrentHealth, 0, TotalHealth);

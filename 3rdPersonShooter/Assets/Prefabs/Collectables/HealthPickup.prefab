@@ -9,46 +9,75 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1560131253810392}
+  m_RootGameObject: {fileID: 1518632057794856}
   m_IsPrefabAsset: 1
---- !u!1 &1560131253810392
+--- !u!1 &1518632057794856
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4335532926733026}
-  - component: {fileID: 33870301669742728}
-  - component: {fileID: 23343264802013778}
-  - component: {fileID: 114556127013759234}
-  - component: {fileID: 65523898575815018}
-  m_Layer: 0
+  - component: {fileID: 4659111365784002}
+  - component: {fileID: 114819735848937038}
+  - component: {fileID: 65676447654713850}
+  m_Layer: 11
   m_Name: HealthPickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4335532926733026
+--- !u!1 &1717906828847916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4222346659817158}
+  - component: {fileID: 33080718181792852}
+  - component: {fileID: 23816379539946336}
+  m_Layer: 11
+  m_Name: HealthMesh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4222346659817158
 Transform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1560131253810392}
-  m_LocalRotation: {x: -1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: -0.69930637, y: 0.474, z: -1.6376798}
-  m_LocalScale: {x: 27.305721, y: 14.652451, z: 23.349165}
+  m_GameObject: {fileID: 1717906828847916}
+  m_LocalRotation: {x: -1, y: -0, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 0.034260485, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 4659111365784002}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -180, y: 0, z: 0}
---- !u!23 &23343264802013778
+--- !u!4 &4659111365784002
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1518632057794856}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.69930637, y: -0.028, z: -1.6376798}
+  m_LocalScale: {x: 27.305721, y: 14.652451, z: 23.349165}
+  m_Children:
+  - {fileID: 4222346659817158}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23816379539946336
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1560131253810392}
+  m_GameObject: {fileID: 1717906828847916}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -78,39 +107,40 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33870301669742728
+--- !u!33 &33080718181792852
 MeshFilter:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1560131253810392}
+  m_GameObject: {fileID: 1717906828847916}
   m_Mesh: {fileID: 4300000, guid: 8842b294d4a6f6a4892717c97238e6a4, type: 3}
---- !u!65 &65523898575815018
+--- !u!65 &65676447654713850
 BoxCollider:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1560131253810392}
+  m_GameObject: {fileID: 1518632057794856}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.020605152, y: 0.021326445, z: 0.021870216}
-  m_Center: {x: 0, y: -0.0006632236, z: 0.0008922656}
---- !u!114 &114556127013759234
+  m_Center: {x: 0, y: 0.035, z: 0.0008922656}
+--- !u!114 &114819735848937038
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1560131253810392}
+  m_GameObject: {fileID: 1518632057794856}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 972095333dc1c8548bdeb4ff5120e1a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidBody: {fileID: 0}
-  _collider: {fileID: 65523898575815018}
+  _collider: {fileID: 65676447654713850}
   IsDead: 0
   IsReserved: 0
   rotationAngle: 3
-  HEALTH_GAIN: 20
+  pickupType: 0
+  HEALTH_GAIN: 15

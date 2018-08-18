@@ -10,7 +10,8 @@ public class PlayerManager : BaseEntity
     public HUDManager hud;
 
     public float speed = 10f;
-    public float speedMult = 1;
+    public float speedMult = 1f;
+    public float speedMultIncr = 0.5f;
     public float horizTurnSpeed = 3f;
     public float verticalTurnSpeed = 3f;
 
@@ -24,6 +25,12 @@ public class PlayerManager : BaseEntity
     {
         AIAttackModule.OnPlayerAttacked += OnPlayerAttacked;
         hud.UpdateChevron();
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        AIAttackModule.OnPlayerAttacked -= OnPlayerAttacked;
     }
 
     public Vector3 playerCorePos
@@ -54,24 +61,31 @@ public class PlayerManager : BaseEntity
             return;
 
         ChangeHealth(-damage);
+    }
+
+    public override void ChangeHealth(float change)
+    {
+        base.ChangeHealth(change);
         hud.UpdateHealthBar(CurrentHealth, TotalHealth);
     }
 
     const int MaxSpeed = 3;
-    float speedReductionInterval = 10;   //reduce speed each interval
-    Coroutine speedReturnCoroutine;
+    float speedReductionInterval = 5;   //reduce speed each interval
+    Coroutine speedReturnCoroutine = null;
 
     public void IncreaseSpeed()
     {
-        speedMult++;
-        speedMult = Mathf.Clamp(speedMult, 1, 3);
+        speedMult += speedMultIncr;
+        speedMult = Mathf.Clamp(speedMult, 1, 2.5f);
 
         SpeedPickup();
 
-        if (speedReturnCoroutine == null)
+        if (speedReturnCoroutine != null)
         {
-            speedReturnCoroutine = StartCoroutine(DoSpeedReduction());
+            StopCoroutine(DoSpeedReduction());
         }
+
+        speedReturnCoroutine = StartCoroutine(DoSpeedReduction());
     }
 
     //gradually reduce speed multiplier, falling back to 1
@@ -81,8 +95,11 @@ public class PlayerManager : BaseEntity
 
         if (speedMult > 1)
         {
-            speedMult--;
+            speedMult -= speedMultIncr;
         }
+
+        //update ui
+        hud.UpdateChevron();
 
         if (speedMult > 1)
         {

@@ -202,7 +202,7 @@ public class AIManager : MonoBehaviour
         agent.enabled = false;
         detectionModule.enabled = false;
         attackModule.enabled = false;
-        currentSpawner.currentSpawnCount--; //remove this Enemy from its spawn Area Count
+        currentSpawner.currentEnemySpawnCount--; //remove this Enemy from its spawn Area Count
     }
    
     void Return()
@@ -214,7 +214,8 @@ public class AIManager : MonoBehaviour
                 
         ResetModelRotation();
 
-        if(Utils.WithinBounds(transform.position, currentSpawner.spawnBounds))
+        Vector2 enemyTopDownPos = new Vector2(transform.position.x, transform.position.z);
+        if(Utils.WithinBounds(enemyTopDownPos, currentSpawner.spawnBounds))
         {
             SwitchAIState(AIState.Wandering);
         }
@@ -302,7 +303,6 @@ public class AIManager : MonoBehaviour
     public void PlayerDetected()
     {
         SwitchAIState(AIState.Seeking);
-        Debug.Log("SWITCH TO SEEK");
     }
 
     public void PlayerUnDetected()
@@ -313,7 +313,6 @@ public class AIManager : MonoBehaviour
 
         SwitchAIState(AIState.Wandering);
         enemy._animator.SetBool("IsSeeking", false);
-        Debug.Log("SWITCH TO SEEK");
     }
 
     void Idling()
@@ -441,8 +440,9 @@ public class AIManager : MonoBehaviour
         Circle2D exagerratedSpawnBounds = currentSpawner.spawnBounds; 
         //we take an area that is 25% larger than the actual spawn bounds, giving some flexibility
         exagerratedSpawnBounds.radius *= 1.25f;
-
-        if (!Utils.WithinBounds(transform.position, exagerratedSpawnBounds))
+        
+        Vector2 enemyTopDownPos = new Vector2(transform.position.x, transform.position.z);
+        if (!Utils.WithinBounds(enemyTopDownPos, exagerratedSpawnBounds))
         {
             SwitchAIState(AIState.Returning);
             return false;
@@ -503,18 +503,18 @@ public class AIManager : MonoBehaviour
     int CheckDirectionToTurn()
     {
         Vector2 wanderTarget2DPos = new Vector2(WanderTarget.transform.position.x, WanderTarget.transform.position.z);
-        Vector2 enemy2DPos = new Vector2(transform.position.x, transform.position.z);
-        Vector2 dirTo = wanderTarget2DPos - enemy2DPos;
+        Vector2 enemyTopDownPos = new Vector2(transform.position.x, transform.position.z);
+        Vector2 dirTo = wanderTarget2DPos - enemyTopDownPos;
         float wanderTargetAngle = Mathf.Atan2(dirTo.y, dirTo.x);
 
         //Debug.Log(" Wander Target Angle at time Of Emergency [" + wanderTargetAngle*Mathf.Rad2Deg + "]");
 
         //Check ClockWise 90 degree shift
-        float dist = Vector2.Distance(wanderTarget2DPos, enemy2DPos);
+        float dist = Vector2.Distance(wanderTarget2DPos, enemyTopDownPos);
         float newAngle = wanderTargetAngle - Mathf.PI / 2f;
         float vx = Mathf.Cos(newAngle) * dist;
         float vy = Mathf.Sin(newAngle) * dist;
-        Vector2 turnedPos = enemy2DPos + new Vector2(vx, vy);
+        Vector2 turnedPos = enemyTopDownPos + new Vector2(vx, vy);
 
         if(Utils.WithinBounds(turnedPos, currentSpawner.spawnBounds))
         {
@@ -525,7 +525,7 @@ public class AIManager : MonoBehaviour
         newAngle = wanderTargetAngle + Mathf.PI / 2f;
         vx = Mathf.Cos(newAngle) * dist;
         vy = Mathf.Sin(newAngle) * dist;
-        turnedPos = enemy2DPos + new Vector2(vx, vy);
+        turnedPos = enemyTopDownPos + new Vector2(vx, vy);
 
         if (Utils.WithinBounds(turnedPos, currentSpawner.spawnBounds))
         {

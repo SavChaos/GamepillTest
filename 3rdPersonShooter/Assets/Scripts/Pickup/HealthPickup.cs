@@ -6,6 +6,11 @@ public class HealthPickup : BasePickup
 {
     public float HEALTH_GAIN = 20;
 
+    private void Awake()
+    {
+        pickupType = PickupType.Health;
+    }
+
     public override void OnTriggerEnter(Collider collider)
     {
         if (collider.gameObject.layer == LayerMask.NameToLayer("Player"))

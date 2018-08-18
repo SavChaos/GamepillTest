@@ -16,7 +16,6 @@ public class Ammo : BaseObject
 
     public void Fire(Ray shootRay, float force)
     {
-        Debug.Log("raycasting");
         RaycastHit[] hits = Physics.RaycastAll(shootRay);
 
         //create a raycast in the direction
@@ -46,7 +45,7 @@ public class Ammo : BaseObject
 
         if (closestHit.collider != null)
         {
-            Debug.LogError("RAY CAST HIT [" + closestHit.collider.gameObject.name + "]");
+            //Debug.Log("RAY CAST HIT [" + closestHit.collider.gameObject.name + "]");
             contactPoint = closestHit.point;
             Vector3 bulletVelocity = shootRay.direction.normalized;
             prevDirToContact = (transform.position - contactPoint).normalized;
@@ -57,7 +56,7 @@ public class Ammo : BaseObject
             {
                 BaseEnemy enemy = closestHit.collider.gameObject.GetComponent<BaseEnemy>();
                 enemy.ChangeHealth(-Main.GetInstance().currentPlayer.weapon.WEAPON_DAMAGE);
-                enemy._aggro = true;    //now the player has caught enemy attension
+                enemy._aggro = true;    //now the player has caught enemy attention
             }
         }
     }

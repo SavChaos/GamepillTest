@@ -29,7 +29,7 @@ public class HUDManager : MonoBehaviour
 
     public void UpdateLevelText()
     {
-        LevelText.text = Main.CURRENT_LEVEL.ToString();
+        LevelText.text = Main.CURRENT_STAGE.ToString();
     }
 
     public void UpdateTimerField()
